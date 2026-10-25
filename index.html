@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#262421">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="שחמט קולני">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>שחמט קולני</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♞</text></svg>">
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="/"><span class="logo-icon">♞</span> שחמט <b>קולני</b></a>
+    <button class="icon-btn" id="btnSettings" title="הגדרות" aria-label="הגדרות">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L4.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+    </button>
+  </header>
+
+  <!-- Lobby -->
+  <main id="lobby" class="lobby">
+    <section class="card hero">
+      <div class="hero-pieces" aria-hidden="true">♚♛♜♝♞♟</div>
+      <h1>שחמט שבו כל כלי צועק</h1>
+      <p>המלך צוחק, הפרש קורא "Hog Rider", הצריח צורח, החייל עושה "אוף", הרץ מתנשף והמלכה גונחת.</p>
+    </section>
+
+    <section class="card">
+      <label class="field">
+        <span>השם שלך</span>
+        <input id="nameInput" maxlength="20" autocomplete="nickname">
+      </label>
+
+      <h2>משחק חדש</h2>
+      <div class="tc-grid" id="tcGrid">
+        <button data-min="1" data-inc="0"><b>1</b><small>בולט</small></button>
+        <button data-min="3" data-inc="0"><b>3</b><small>בליץ</small></button>
+        <button data-min="3" data-inc="2"><b>3 | 2</b><small>בליץ</small></button>
+        <button data-min="5" data-inc="0"><b>5</b><small>בליץ</small></button>
+        <button data-min="10" data-inc="0" class="on"><b>10</b><small>רפיד</small></button>
+        <button data-min="15" data-inc="10"><b>15 | 10</b><small>רפיד</small></button>
+        <button data-min="30" data-inc="0"><b>30</b><small>קלאסי</small></button>
+        <button data-min="0" data-inc="0"><b>∞</b><small>ללא שעון</small></button>
+      </div>
+
+      <div class="color-pick" id="colorPick">
+        <button data-color="w" title="לבן"><span class="glyph w">♚</span></button>
+        <button data-color="random" class="on" title="אקראי"><span class="glyph half">♚</span></button>
+        <button data-color="b" title="שחור"><span class="glyph b">♚</span></button>
+      </div>
+
+      <button class="btn primary big" id="btnCreate">צור משחק והזמן חבר</button>
+
+      <div class="divider"><span>או</span></div>
+
+      <h2>הצטרף למשחק</h2>
+      <div class="join-row">
+        <input id="codeInput" placeholder="קוד חדר" maxlength="5" dir="ltr" autocomplete="off">
+        <button class="btn" id="btnJoin">הצטרף</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Game -->
+  <main id="game" class="game" hidden>
+    <div class="board-col">
+      <div class="pbar" id="barTop">
+        <div class="avatar"></div>
+        <div class="pinfo">
+          <div class="pname-row"><span class="dot"></span><span class="pname"></span><span class="you" hidden>(אתה)</span></div>
+          <div class="caps"></div>
+        </div>
+        <div class="clock"></div>
+      </div>
+
+      <div class="board-wrap">
+        <div class="board" id="board"></div>
+        <div class="board-overlay" id="waitOverlay" hidden>
+          <div>ממתין ליריב…</div>
+          <small>שלח לו את הקישור מהפאנל</small>
+        </div>
+      </div>
+
+      <div class="pbar" id="barBottom">
+        <div class="avatar"></div>
+        <div class="pinfo">
+          <div class="pname-row"><span class="dot"></span><span class="pname"></span><span class="you" hidden>(אתה)</span></div>
+          <div class="caps"></div>
+        </div>
+        <div class="clock"></div>
+      </div>
+    </div>
+
+    <aside class="side">
+      <div class="side-head">
+        <div class="room">חדר <b id="roomCode" dir="ltr"></b> <span id="tcLabel" class="muted"></span></div>
+        <div class="status" id="status"></div>
+      </div>
+
+      <div class="invite" id="invite" hidden>
+        <p>שלח את הקישור לחבר כדי להתחיל:</p>
+        <div class="join-row">
+          <input id="inviteLink" readonly dir="ltr">
+          <button class="btn primary" id="btnCopy">העתק</button>
+        </div>
+      </div>
+
+      <div class="banner" id="drawBanner" hidden>
+        <span>היריב מציע תיקו</span>
+        <button class="btn small primary" id="btnDrawAccept">קבל</button>
+        <button class="btn small" id="btnDrawDecline">דחה</button>
+      </div>
+
+      <div class="moves" id="moves" dir="ltr"></div>
+
+      <div class="actions">
+        <button class="btn" id="btnDraw"><span class="ic">½</span><span class="lb">הצע תיקו</span></button>
+        <button class="btn" id="btnResign"><span class="ic">⚑</span><span class="lb">כניעה</span></button>
+        <button class="btn primary" id="btnRematch" hidden><span class="ic">↻</span><span class="lb">משחק חוזר</span></button>
+        <button class="btn" id="btnFlip" title="הפוך לוח"><span class="ic">⇅</span><span class="lb">הפוך</span></button>
+        <button class="btn" id="btnShare"><span class="ic">🔗</span><span class="lb">קישור</span></button>
+        <button class="btn" id="btnChat"><span class="ic">💬</span><span class="lb">צ'אט</span><i class="badge" id="chatBadge" hidden></i></button>
+        <button class="btn" id="btnNew"><span class="ic">＋</span><span class="lb">משחק חדש</span></button>
+      </div>
+      <p class="muted center" id="spectatorNote" hidden>אתה צופה במשחק הזה</p>
+
+      <div class="chat">
+        <div class="chat-log" id="chatLog"></div>
+        <form id="chatForm" class="join-row">
+          <input id="chatInput" maxlength="200" placeholder="כתוב הודעה…" autocomplete="off">
+          <button class="btn small">שלח</button>
+        </form>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Settings -->
+  <div class="modal" id="settingsModal" hidden>
+    <div class="modal-card">
+      <h2>הגדרות</h2>
+      <label class="switch-row">
+        <span>סאונד</span>
+        <input type="checkbox" id="soundToggle" class="switch">
+      </label>
+      <label class="switch-row">
+        <span>עוצמה</span>
+        <input type="range" id="volume" min="0" max="1" step="0.05">
+      </label>
+      <label class="switch-row">
+        <span>פרש מדבר באנגלית (TTS)</span>
+        <input type="checkbox" id="speechToggle" class="switch">
+      </label>
+      <h3>נסה את הקולות</h3>
+      <div class="test-grid" id="testGrid">
+        <button data-p="k"><span class="glyph w">♚</span>מלך</button>
+        <button data-p="q"><span class="glyph w">♛</span>מלכה</button>
+        <button data-p="r"><span class="glyph w">♜</span>צריח</button>
+        <button data-p="b"><span class="glyph w">♝</span>רץ</button>
+        <button data-p="n"><span class="glyph w">♞</span>פרש</button>
+        <button data-p="p"><span class="glyph w">♟</span>חייל</button>
+      </div>
+      <button class="btn primary" data-close>סגור</button>
+    </div>
+  </div>
+
+  <!-- Promotion -->
+  <div class="modal" id="promoModal" hidden>
+    <div class="modal-card promo">
+      <h3>הכתרה</h3>
+      <div class="promo-row" id="promoRow"></div>
+    </div>
+  </div>
+
+  <!-- Game over -->
+  <div class="modal" id="overModal" hidden>
+    <div class="modal-card over">
+      <div class="over-icon" id="overIcon"></div>
+      <h2 id="overTitle"></h2>
+      <p id="overReason" class="muted"></p>
+      <button class="btn primary" id="btnOverRematch"><span class="lb">משחק חוזר</span></button>
+      <button class="btn" data-close>סגור</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="sounds.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
