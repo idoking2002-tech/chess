@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♞</text></svg>">
 </head>
 <body>
@@ -155,7 +155,7 @@
         <input type="range" id="volume" min="0" max="1" step="0.05">
       </label>
       <label class="switch-row">
-        <span>פרש מדבר באנגלית (TTS)</span>
+        <span>קול מדבר ל-Hog Rider ול-Holy Shit</span>
         <input type="checkbox" id="speechToggle" class="switch">
       </label>
       <h3>נסה את הקולות</h3>
@@ -166,6 +166,9 @@
         <button data-p="b"><span class="glyph w">♝</span>רץ</button>
         <button data-p="n"><span class="glyph w">♞</span>פרש</button>
         <button data-p="p"><span class="glyph w">♟</span>חייל</button>
+        <button data-p="check"><span class="glyph w">+</span>שח</button>
+        <button data-p="mate"><span class="glyph w">#</span>מט (שיר)</button>
+        <button data-p="stop"><span class="glyph w">■</span>עצור שיר</button>
       </div>
       <button class="btn primary" data-close>סגור</button>
     </div>
@@ -193,7 +196,7 @@
   <div class="toast" id="toast" hidden></div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="sounds.js"></script>
-  <script src="client.js"></script>
+  <script src="sounds.js?v=2"></script>
+  <script src="client.js?v=2"></script>
 </body>
 </html>

@@ -113,6 +113,7 @@
   }
   function leaveRoom() {
     socket.emit('leave');
+    SFX.stopSong();
     roomCode = null; myColor = null; S = null;
     history.replaceState(null, '', '/');
     showLobby();
@@ -138,6 +139,7 @@
   });
   socket.on('newgame', () => {
     $('#overModal').hidden = true;
+    SFX.stopSong();
     addChat({ sys: true, text: 'משחק חוזר התחיל! הצבעים התחלפו.' });
     SFX.notify();
   });
@@ -158,10 +160,12 @@
     if (prev && prev.status === 'playing' && s.status === 'over') showGameOver();
   });
   socket.on('moved', (m) => {
-    if (m.color === myColor) return; // already played locally
-    SFX.play(m.piece);
+    // Checkmate gets the song, check gets "holy shit", everything else the piece's voice.
+    if (m.mate) SFX.play('mate');
+    else if (m.check) SFX.play('check');
+    else SFX.play(m.piece);
     if (m.captured) SFX.capture();
-    if (navigator.vibrate) navigator.vibrate(m.check ? [30, 40, 30] : 20);
+    if (m.color !== myColor && navigator.vibrate) navigator.vibrate(m.check ? [30, 40, 30] : 20);
   });
   socket.on('chat', addChat);
 
@@ -426,7 +430,6 @@
 
   function sendMove(from, to, promotion) {
     const p = pos[from];
-    const captured = !!pos[to] || (p.type === 'p' && from[0] !== to[0]);
     // Optimistic local update; the server's state replaces it right away.
     delete pos[from];
     if (p.type === 'p' && from[0] !== to[0] && !pos[to]) delete pos[to[0] + from[1]];
@@ -440,8 +443,6 @@
     legal = [];
     selected = null;
     renderBoard();
-    SFX.play(p.type);
-    if (captured) SFX.capture();
     if (navigator.vibrate) navigator.vibrate(15);
     socket.emit('move', { from, to, promotion });
   }
@@ -466,6 +467,7 @@
     $('#overTitle').textContent = resultText();
     $('#overReason').textContent = win ? `${COLOR_NAME[win]} ניצח ${REASONS[S.reason] || ''}` : REASONS[S.reason] || '';
     $('#overModal').hidden = false;
+    if (S.reason === 'checkmate') return; // the mate song is already playing
     if (myColor && win === myColor) SFX.play('k');
     else SFX.notify();
   }
@@ -510,7 +512,10 @@
   speechToggle.onchange = () => SFX.set('speech', speechToggle.checked);
   $('#testGrid').addEventListener('click', (e) => {
     const b = e.target.closest('button');
-    if (b) SFX.play(b.dataset.p, true);
+    if (!b) return;
+    SFX.unlock();
+    if (b.dataset.p === 'stop') SFX.stopSong();
+    else SFX.play(b.dataset.p, true);
   });
   $('#btnSettings').onclick = () => { $('#settingsModal').hidden = false; };
 
