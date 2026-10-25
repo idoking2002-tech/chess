@@ -11,11 +11,15 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Site files normally live in public/, but also work when uploaded flat next to server.js.
+const STATIC_DIR = fs.existsSync(path.join(__dirname, 'public', 'index.html'))
+  ? path.join(__dirname, 'public')
+  : __dirname;
+app.use(express.static(STATIC_DIR));
 app.get('/healthz', (req, res) => res.send('ok'));
-// Lists real clips dropped into public/sounds so the client can prefer them over synthesis.
+// Lists real clips dropped into sounds/ so the client can prefer them over synthesis.
 app.get('/sounds-manifest', (req, res) => {
-  fs.readdir(path.join(__dirname, 'public', 'sounds'), (err, files) => {
+  fs.readdir(path.join(STATIC_DIR, 'sounds'), (err, files) => {
     res.json(err ? [] : files.filter((f) => /\.(mp3|wav|ogg)$/i.test(f)));
   });
 });
